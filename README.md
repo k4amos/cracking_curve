@@ -2,11 +2,12 @@
 
 A real-time visualization tool for monitoring Hashcat / Autocat password cracking progress with interactive curves.
 
+Autocat cracking curve of this 2014 [public leak](https://github.com/YoureIronic/Historical-Data-Breaches-Archive/blob/main/breaches/Dominos/index.md) : 
 <p align="center">
     <img src="img/exemple.png" style="height:350px">
-    *Autocat cracking curve of this 2014 [public leak](https://github.com/YoureIronic/Historical-Data-Breaches-Archive/blob/main/breaches/Dominos/index.md)*
 </p>
 
+⚠️ The README is currently under construction.
 
 ## Features
 
