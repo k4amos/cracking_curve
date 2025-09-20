@@ -169,8 +169,8 @@ class PasswordCrackingApp:
                     dcc.RadioItems(
                         id='y-axis-radio',
                         options=[
-                            {'label': 'Percentage', 'value': 'percentage'},
-                            {'label': 'Count', 'value': 'count'}
+                            {'label': 'Percentage (of cracked passwords)', 'value': 'percentage'},
+                            {'label': 'Count (of cracked passwords)', 'value': 'count'}
                         ],
                         value='percentage',
                         inline=True,
@@ -239,14 +239,10 @@ class PasswordCrackingApp:
         x_axis_title = "Time (seconds)" if self.x_axis_type == 'time' else "Number of hashes tested"
         y_axis_title = "Cracked passwords (count)" if self.y_axis_type == 'count' else "Cracked passwords (%)"
 
-        # Color palette for different files
-        colors = ['blue', 'red', 'green', 'orange', 'purple', 'brown', 'pink', 'gray']
-
         # Process each file
         for file_idx, (file_path, parser) in enumerate(self.parsers.items()):
             curves_x, curves_y, label_list = parser.parse_status_file()
-            file_name = Path(file_path).stem
-            file_color = colors[file_idx % len(colors)]
+            file_name = f"<b>{Path(file_path).stem}</b>"
 
             for k in range(len(curves_x)):
                 # Downsample large datasets
@@ -265,7 +261,10 @@ class PasswordCrackingApp:
 
                 # Extract label info
                 (guess_base, guess_mod) = label_list[k]
-                attack_label = f"{guess_base.split('/')[-1]} {guess_mod.split('/')[-1]}" if guess_mod != None else guess_base.split('/')[-1]
+                if guess_mod != None:
+                    attack_label = f"{guess_base.split('/')[-1]} {guess_mod.split('/')[-1]}"
+                else:
+                    attack_label = f"brute-force {len(guess_base.split('/')[-1]) //2} characters"
 
                 # Special handling for potfile - use black unless disabled
                 if "potfile" in guess_base and not self.no_potfile_highlight:
@@ -294,9 +293,9 @@ class PasswordCrackingApp:
 
         return fig
 
-    def run(self, debug=False, host='127.0.0.1', port=8050):
+    def run(self, host='127.0.0.1', port=8050):
         """Run the Dash application."""
-        self.app.run(debug=debug, host=host, port=port)
+        self.app.run(host=host, port=port)
 
 
 def main():
@@ -318,14 +317,12 @@ Examples:
 All visualization settings can be controlled through the web interface.
 
 Note: The input files should contain hashcat JSON status outputs
-      generated with: hashcat --status-json --status-timer 1 --status ...
+      generated with: hashcat --status-json --status-timer 1 --status | tee save_output.json
 """
     )
 
     parser.add_argument('files', nargs='+',
                         help='Path(s) to hashcat JSON output file(s)')
-    parser.add_argument('--debug', action='store_true',
-                        help='Run in debug mode')
     parser.add_argument('--host', default='127.0.0.1',
                         help='Host to run the server on (default: 127.0.0.1)')
     parser.add_argument('--port', type=int, default=8050,
@@ -347,7 +344,7 @@ Note: The input files should contain hashcat JSON status outputs
     print("All settings can be controlled through the web interface.")
     print("Press Ctrl+C to stop")
 
-    app.run(debug=args.debug, host=args.host, port=args.port)
+    app.run(host=args.host, port=args.port)
 
 
 if __name__ == "__main__":
