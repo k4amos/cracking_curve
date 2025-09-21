@@ -155,7 +155,7 @@ class PasswordCrackingApp:
                     dcc.RadioItems(
                         id='x-axis-radio',
                         options=[
-                            {'label': 'Number of hashes', 'value': 'guesses'},
+                            {'label': 'Number of hashes tested', 'value': 'guesses'},
                             {'label': 'Time (seconds)', 'value': 'time'}
                         ],
                         value='guesses',
@@ -286,7 +286,7 @@ class PasswordCrackingApp:
             xaxis_title=x_axis_title,
             yaxis_title=y_axis_title,
             template="plotly_white",
-            legend=dict(title="Files and Attack Phases"),
+            legend=dict(title="Files & Attack Sequences"),
             hovermode='x unified',
             margin=dict(t=30, b=60)
         )
